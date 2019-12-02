@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head> 
+    <meta charset="utf-8"/>
+    <title>Tranche-Papaye</title>
+    <link href="./public/css/style.css" rel="stylesheet" type="text/css">
+</head>
+<body >
+<!--   -->
+<div id="overlay">
+  <div id="text">Nombres de joueurs:
+      <select id="nbJoueurs">
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+    </select>
+    <button onclick="off()">Start</button>
+  </div>
+</div>
+<h1>Tranche-Papaye</h1>
+<p id="turnPlayer">
+   
+</p>
+  
+<div id="qcm">
+</div>
+<div id="boutique" >
+    <button id="boutique_close" onclick="close_boutique()">Fermer la boutique</button>
+    <p id="item_boutique">
+        
+    </p>
+</div>
+  
+<div id="choice">
+    <p id="textFound"></p>
+    <button id="add_bac">Ajouter à la boutique</button>
+    <button id="add_petit">Ajouter au petit déjeuner</button>
+    <button id="add_dejeuner">Ajouter au déjeuner</button>
+    <button id="add_gouter">Ajouter au goûter</button>
+    <button id="add_diner">Ajouter au diner</button>
+</div>
+
+<div class="grid-container" id="grid-tab">
+    
+</div>
+  <p id="textComplet">
+      
+  </p>
+  <p id="textResult" hidden="true"> 
+      
+  </p>
+  <p id="placeholder">
+    
+    </p>
+  <button id="button">Roll Dice</button>
+  <button id="boutique_open" onclick="open_boutique()">Ouvrir la boutique</button>
+  <script src="Règles cartes.js" charset="iso-8859-1"></script>
+  <script src="./Fruits/fruit1.js"charset="iso-8859-1"></script>
+  <script src="./Fruits/fruit2.js"charset="iso-8859-1"></script>
+  <script src="./Plats/plat1.js"charset="iso-8859-1"></script>
+  <script src="./Plats/plat2.js"charset="iso-8859-1"></script>
+  <script src="./Petit Déjeuner/petitdej1.js"charset="iso-8859-1"></script>
+  <script src="./Petit Déjeuner/petitdej2.js"charset="iso-8859-1"></script>
+  <script src="./Légumes/legume1.js"charset="iso-8859-1"></script>
+  <script src="./Légumes/legume2.js"charset="iso-8859-1"></script>
+  <script src="./Chance/chance1.js"charset="iso-8859-1"></script>
+  <script src="./Malice/malice1.js"charset="iso-8859-1"></script>
+  <!--<script src="dice.js"></script>-->
+
+</body>
+</html>
