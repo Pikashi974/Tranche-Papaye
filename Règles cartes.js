@@ -162,20 +162,6 @@ complet.registerListener(function(val) {
     fillTab();
 });
 
-var petitDej1 = {
-    first: "Macatia",
-    second:"Fromage blanc",
-    third:"Infusion à la verveine",
-    fourth:"Pêches"
-};
-
-var petitDej2 = {
-    first: "Corn Flakes",
-    second:"Lait"
-};
-
-
-
 function qcm(chance){
     document.getElementById("qcm").style.display = "block";
     var texte="";
@@ -270,10 +256,10 @@ function gridCreation(n){
 function fillGrid() {
     x=document.getElementsByClassName("grid-item");
     for (var i = 0; i < x.length; i++) {
-       x[i].innerHTML = "Petit Déjeuner : " + Petit_Dejeuner.a[i]
-               +"<br> Déjeuner : " + Dejeuner.a[i]
-               +"<br> Gouter : " + Gouter.a[i]
-               +"<br> Diner : " + Diner.a[i];
+       x[i].innerHTML = "<p id='first_part'>Petit Déjeuner : " + Petit_Dejeuner.a[i]
+               +"</p> <p id='second_part'>Déjeuner : " + Dejeuner.a[i]
+               +"</p> <p id='third_part'> Gouter : " + Gouter.a[i]
+               +"</p> <p id='fourth_part'>Diner : " + Diner.a[i] +"</p>";
     }
 }
 
@@ -299,7 +285,7 @@ function de_result(){
             console.log("result= "+result);
             switch(placeholder.innerHTML){
                 case "La malice":
-                    eval(malice1.action);
+                    eval(eval("malice"+result+".action"));
                     skip[i]=true; //l'enfant passe son tour à cause de la carte malice
                     break;
                 case "La chance":
@@ -463,11 +449,24 @@ function bac_or_set(objet,position){
     };
 }
 
-function remove_all(num_joueur,element){
+function malice(objet){
+    document.getElementById("qcm").style.display = "block";
+    var texte="";
+    texte= texte+"<p>"+objet.texte+"</p>";
+    texte=texte+'<button id="action" onclick='+objet.action_2+'>Action</button>';
+    document.getElementById("qcm").innerHTML=texte;
+}
+
+function remove_all(num_joueur,element,carte){
     remove(Petit_Dejeuner.a[num_joueur],element);
     remove(Dejeuner.a[num_joueur],element);
     remove(Gouter.a[num_joueur],element);
     remove(Diner.a[num_joueur],element);
+    document.getElementById("qcm").style.display = "none";
+    var result=Math.floor(Math.random() * 2) + 1;
+    var objet = eval(carte+result);
+    bac_or_set(objet,num_joueur);
+    
 }
 
 function remove(tableau, element){
@@ -476,6 +475,7 @@ function remove(tableau, element){
             tableau.splice(i,1);
         }
     }
+    
 }
 
 function shuffle(object,tableau){
