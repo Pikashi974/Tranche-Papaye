@@ -4,9 +4,6 @@ var placeholder = document.getElementById('placeholder');
 var object = document.getElementById("textResult");
 var turnPlayer = document.getElementById("turnPlayer");
 
-//var json = require('./data.json'); //(with path)
-
-
 var bac = document.getElementById('add_bac');
 var petit = document.getElementById('add_petit');
 var dejeuner = document.getElementById('add_dejeuner');
@@ -256,10 +253,10 @@ function gridCreation(n){
 function fillGrid() {
     x=document.getElementsByClassName("grid-item");
     for (var i = 0; i < x.length; i++) {
-       x[i].innerHTML = "<p id='first_part'>Petit Déjeuner : " + Petit_Dejeuner.a[i]
-               +"</p> <p id='second_part'>Déjeuner : " + Dejeuner.a[i]
-               +"</p> <p id='third_part'> Gouter : " + Gouter.a[i]
-               +"</p> <p id='fourth_part'>Diner : " + Diner.a[i] +"</p>";
+       x[i].innerHTML = "<div id='first_part'><div id='1_1'> " + Petit_Dejeuner.a[i]
+               +"</div> <div id='1_2'></div> <div id='1_3'> " + Dejeuner.a[i]
+               +"</div></div> <div id='second_part'><div id='2_1'> " + Gouter.a[i]
+               +"</div> <div id='2_2'></div> <div id='2_3'> " + Diner.a[i] +"</div></div>";
     }
 }
 
@@ -281,12 +278,13 @@ function de_result(){
             demarrage[i]=true;//On dit que l'enfant peut démarrer
             console.log("j= "+j);
             var result=Math.floor(Math.random() * 2) + 1;
-            
+            var has_skip = false;
             console.log("result= "+result);
             switch(placeholder.innerHTML){
                 case "La malice":
                     eval(eval("malice"+result+".action"));
                     skip[i]=true; //l'enfant passe son tour à cause de la carte malice
+                    has_skip=true;
                     break;
                 case "La chance":
                     eval(chance1.action);
@@ -320,8 +318,12 @@ function de_result(){
             }
             //Interdits[i] = 1;
         }
-        skip[i]=false; //Sert à redonner son tour à l'enfant s'il a du passer son tour
+        
         fillTab();
+        if (has_skip === false){
+            skip[i]=false; //Sert à redonner son tour à l'enfant s'il a du passer son tour
+        }
+        turnPlayer.innerHTML="Au tour du joueur "+ (1+(clicks.a%nbJoueurs));
     }
 
     
@@ -346,10 +348,23 @@ function nb_complet(position){
 
 function bac_or_set(objet,position){
     document.getElementById("choice").style.display = "block";
-    document.getElementById("textFound").innerHTML = Object.values(objet);
+    if("img" in objet){//On vérifie que la carte est une image
+        console.log("A une image");
+        document.getElementById("textFound").innerHTML = "<img src='"+objet.img+"'>";
+    }
+    else{
+        console.log("N'a pas une image");
+        document.getElementById("textFound").innerHTML = Object.values(objet);
+    }
+    
     petit.onclick = function(){
-        Petit_Dejeuner.a[position].push(Object.values(objet));
-        dejeuner.style.visibility = "visible";
+        if("img" in objet){//On vérifie que la carte a une image
+            Petit_Dejeuner.a[position].push("<img src='"+objet.img+"'>");
+        }
+        else{
+            Petit_Dejeuner.a[position].push(Object.values(objet));
+        }
+        dejeuner.style.visibility = "visible";//Réaffiche les boutons pour les autres cartes
         diner.style.visibility = "visible";
         document.getElementById("choice").style.display = "none";
         complet.a = complet.a ;
@@ -367,11 +382,15 @@ function bac_or_set(objet,position){
             document.getElementById("textComplet").innerHTML = "Joueur " + (position+1).toString() + " gagne";
             button.disabled = true;
         }
-        turnPlayer.innerHTML="Au tour du joueur "+ (1+(clicks.a%nbJoueurs));
         
     };
     dejeuner.onclick = function(){
-        Dejeuner.a[position].push(Object.values(objet));
+        if("img" in objet){//On vérifie que la carte a une image
+            Dejeuner.a[position].push(Object.values(objet).slice(0, -1));
+        }
+        else{
+            Dejeuner.a[position].push(Object.values(objet));
+        }
         document.getElementById("choice").style.display = "none";
         complet.a = complet.a ;
         for (var i = 0; i < nbJoueurs; i++) {
@@ -388,10 +407,15 @@ function bac_or_set(objet,position){
             document.getElementById("textComplet").innerHTML = "Joueur " + (position+1).toString() + " gagne";
             button.disabled = true;
         }
-        turnPlayer.innerHTML="Au tour du joueur "+ (1+(clicks.a%nbJoueurs));
+
     };
     gouter.onclick = function(){
-        Gouter.a[position].push(Object.values(objet));
+        if("img" in objet){//On vérifie que la carte a une image
+            Gouter.a[position].push(Object.values(objet).slice(0, -1));
+        }
+        else{
+            Gouter.a[position].push(Object.values(objet));
+        }
         dejeuner.style.visibility = "visible";
         diner.style.visibility = "visible";
         document.getElementById("choice").style.display = "none";
@@ -410,10 +434,15 @@ function bac_or_set(objet,position){
             document.getElementById("textComplet").innerHTML = "Joueur " + (position+1).toString() + " gagne";
             button.disabled = true;
         }
-        turnPlayer.innerHTML="Au tour du joueur "+ (1+(clicks.a%nbJoueurs));
+
     };
     diner.onclick = function(){
-        Diner.a[position].push(Object.values(objet));
+        if("img" in objet){//On vérifie que la carte a une image
+            Diner.a[position].push(Object.values(objet).slice(0, -1));
+        }
+        else{
+            Diner.a[position].push(Object.values(objet));
+        }
         document.getElementById("choice").style.display = "none";
         complet.a = complet.a ;
         for (var i = 0; i < nbJoueurs; i++) {
@@ -445,7 +474,7 @@ function bac_or_set(objet,position){
         console.log("Interdits: "+ Interdits);
         
         fillTab();
-        turnPlayer.innerHTML="Au tour du joueur "+ (1+(clicks.a%nbJoueurs));
+
     };
 }
 
@@ -466,7 +495,6 @@ function remove_all(num_joueur,element,carte){
     var result=Math.floor(Math.random() * 2) + 1;
     var objet = eval(carte+result);
     bac_or_set(objet,num_joueur);
-    
 }
 
 function remove(tableau, element){
