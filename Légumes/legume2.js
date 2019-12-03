@@ -1,3 +1,3 @@
 const legume2 = {
-    first:"Purée de carottes"
+    first:"Gratin de chouchoux"
 };

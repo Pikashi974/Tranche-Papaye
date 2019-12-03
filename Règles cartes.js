@@ -3,6 +3,9 @@ var button = document.getElementById('button');
 var placeholder = document.getElementById('placeholder');
 var object = document.getElementById("textResult");
 var turnPlayer = document.getElementById("turnPlayer");
+var buttton_solidaire = document.getElementById("charity");
+
+var showcase = document.getElementById("qcm");
 
 var bac = document.getElementById('add_bac');
 var petit = document.getElementById('add_petit');
@@ -13,6 +16,7 @@ var diner = document.getElementById('add_diner');
 var nbJoueurs = yourSelect.options[ yourSelect.selectedIndex ].value;
 var demarrage = [false,false,false,false, false, false];
 var skip = [false,false,false,false, false, false];
+var solidarity = [false,false,false,false, false, false];
 var plateau = [];
 
 var dice = {
@@ -62,6 +66,8 @@ var j = clicks.a%nbJoueurs;//Permet de savoir  quel joueur joue
 
 var Petit_Dejeuner = {
   aInternal: [[],[],[],[],[],[]],
+  images: [[],[],[],[],[],[]],
+  name:"Petit_Dejeuner",
   aListener: function(val) {},
   set a(val) {
     this.aInternal = val;
@@ -80,6 +86,8 @@ Petit_Dejeuner.registerListener(function(val) {
 
 var Dejeuner = {
   aInternal: [[],[],[],[],[],[]],
+  images: [[],[],[],[],[],[]],  
+  name: "Dejeuner",
   aListener: function(val) {},
   set a(val) {
     this.aInternal = val;
@@ -98,6 +106,8 @@ Dejeuner.registerListener(function(val) {
 
 var Gouter = {
   aInternal: [[],[],[],[],[],[]],
+  images: [[],[],[],[],[],[]],  
+  name: "Gouter",
   aListener: function(val) {},
   set a(val) {
     this.aInternal = val;
@@ -116,6 +126,8 @@ Gouter.registerListener(function(val) {
 
 var Diner = {
   aInternal: [[],[],[],[],[],[]],
+  images: [[],[],[],[],[],[]],  
+  name: "Diner",
   aListener: function(val) {},
   set a(val) {
     this.aInternal = val;
@@ -160,7 +172,7 @@ complet.registerListener(function(val) {
 });
 
 function qcm(chance){
-    document.getElementById("qcm").style.display = "block";
+    showcase.style.display = "block";
     var texte="";
     texte= texte+"<p>"+chance.texte+ "<br>"+chance.question+"</p>";
     for (var i = 0; i < chance.propositions.length; i++) {
@@ -169,7 +181,7 @@ function qcm(chance){
                 chance.propositions.indexOf(chance.réponse)+')>'+
                 chance.propositions[i]+'</button>';
     }
-    document.getElementById("qcm").innerHTML=texte;
+    showcase.innerHTML=texte;
 } 
 
 function réponse(rep,answer){
@@ -180,12 +192,12 @@ function réponse(rep,answer){
     else{
         var texte = "Mauvaise réponse";
     }
-    document.getElementById("qcm").innerHTML="<button onclick='close_qcm()'>"+texte+"</button>";
+    showcase.innerHTML="<button onclick='close_qcm()'>"+texte+"</button>";
     
 }
 
 function close_qcm(){
-    document.getElementById("qcm").style.display = "none";
+    showcase.style.display = "none";
 }
 
 function open_boutique() {
@@ -236,6 +248,86 @@ function card(result) {
     return choice;
 }
 
+function solidar(position){
+    showcase.style.display = "block";
+    var texte = "";
+    texte = texte+"<img src='./public/css/Solidarite.png'><br>";
+    texte = texte+"<button onclick='boutique()'>Ajouter à la boutique</button> <button onclick=board("+position+")>Ajouter au plateau</button>";
+    showcase.innerHTML = texte;
+}
+
+function boutique(){
+    showcase.style.display = "none";
+    fillTab();
+}
+
+function board(position){
+    solidarity[position]=true;
+    showcase.style.display = "none";
+    fillTab();
+}
+
+function charity(joueur){
+    showcase.style.display = "block";
+    var texte = "<p>Faire preuve de solidarité à qui?</p><br>";
+    for (var i = 0; i < nbJoueurs; i++) {
+        if(demarrage[i]===false || skip[i] === true){
+            texte = texte+"<button onclick='liberate("+i+","+joueur+")'>Joueur "+(i+1)+"</button>";
+        }
+    }
+    showcase.innerHTML=texte;
+}
+
+function liberate(nbJoueur,giver){
+    demarrage[nbJoueur]=true;
+    skip[nbJoueur] = false;
+    showcase.style.display = "none";
+    solidarity[giver]=false;
+    buttton_solidaire.style.visibility="hidden";
+    //clicks.a+=1;
+}
+
+function plateau_rempli(tableau,position){
+    if(tableau.images[position].length> 2){
+        showcase.style.display = "block";
+        var texte = "<p>Retirer quelle carte?</p><br>";
+        console.log(tableau.images[position].length);
+        for (var i = 0; i < tableau.images[position].length; i++) {
+            var element = eval(tableau.images[position][i]);
+            console.log(element);
+            if("img" in element){
+                texte = texte + "<img onclick=retirer("+tableau.images[position][i]+","+tableau.name+","+position+") src='"+element.img+"'>";
+            }
+            else{
+                texte = texte + "<p onclick=retirer("+tableau.images[position][i]+","+tableau.name+","+position+")>"+Object.values(element)+"</p>";
+            }
+        }
+        showcase.innerHTML=texte;
+    }
+};
+
+function retirer(objet,tableau,position){
+    var elements = eval(objet);
+    var tab_elements = Object.values(elements);
+    var tab = eval(tableau);
+    console.log("Element="+tab_elements);
+    console.log("Tab="+tab.a[position]);
+    var min = tab.a[position].indexOf(tab_elements[0]);
+    if("img" in elements){
+        var max=tab_elements.length-1;
+    }
+    else{
+        var max=tab_elements.length;
+    }
+    
+    //console.log("Min vaut "+min+ " et max vaut "+max);
+    console.log("Avant: " + tab.a[position]);
+    tab.a[position].splice(min,max); //.splice(i, 1);
+    tab.images[position].splice(tab.images[position].indexOf(objet),1);
+    console.log("Après: " + tab.a[position]);
+    //tab.images[position].splice(tab.images[position].indexOf(objet), 1);
+    showcase.style.display = "none";
+}
 function gridCreation(n){
     grid=document.getElementById("grid-tab");
     for (var i = 0; i < n; i++) {
@@ -273,59 +365,62 @@ function count(element,tableau){
 function de_result(){
     for (var i = 0; i < nbJoueurs; i++) {
         ///Au départ, aucun enfant ne peut commencer s'il n'a pas obtenu un fruit ou légumes
+        //On regarde aussi si l'enfant ne doit pas passer son tour
         if ((i===j && demarrage[i]===true) || (i===j && skip[i] === false && demarrage[i]===false && object.innerHTML==="On démarre ")){
             console.log("placeholder.innerHTML==="+placeholder.innerHTML);
             demarrage[i]=true;//On dit que l'enfant peut démarrer
             console.log("j= "+j);
             var result=Math.floor(Math.random() * 2) + 1;
-            var has_skip = false;
             console.log("result= "+result);
             switch(placeholder.innerHTML){
                 case "La malice":
                     eval(eval("malice"+result+".action"));
                     skip[i]=true; //l'enfant passe son tour à cause de la carte malice
-                    has_skip=true;
                     break;
                 case "La chance":
                     eval(chance1.action);
                     break;
                 case "Plats":
-                    var objet = eval("plat"+result);
+                    var objet = "plat"+result;
                     console.log("Plat:"+Object.values(objet));
-                    bac_or_set(objet,j);
+                    bac_or_set(eval(objet),j,objet);
                     break;
                 case "Petits déjeuners et goûters":
-                    var objet = eval("petitDej"+result);
+                    var objet = "petitDej"+result;
                     console.log("Plat:"+Object.values(objet));
                     dejeuner.style.visibility = "hidden";
                     diner.style.visibility = "hidden";
-                    bac_or_set(objet,j);
+                    bac_or_set(eval(objet),j,objet);
                     break;
                 case "Fruits":
                     console.log("Fruit");
-                    var objet = eval("fruit"+result);
-                    Fruit_Legumes[i] = Fruit_Legumes[i]+1;
+                    var objet = "fruit"+result;
                     console.log("Fruit:"+Object.values(objet));
-                    bac_or_set(objet,j);
+                    bac_or_set(eval(objet),j,objet);
                     break;
                 case "Légumes":
                     console.log("Legume");
-                    var objet = eval("legume"+result);
-                    Fruit_Legumes[i] = Fruit_Legumes[i]+1;
+                    var objet = "legume"+result;
                     console.log("Légume:"+Object.values(objet));
-                    bac_or_set(objet,j);
+                    bac_or_set(eval(objet),j,objet);
                     break;
             }
             //Interdits[i] = 1;
         }
         
-        fillTab();
-        if (has_skip === false){
+        else if (i===j && skip[i]===true){//L'enfant doit passer son tour
             skip[i]=false; //Sert à redonner son tour à l'enfant s'il a du passer son tour
+            clicks.a+=1;
         }
-        turnPlayer.innerHTML="Au tour du joueur "+ (1+(clicks.a%nbJoueurs));
+        fillTab();
     }
-
+    turnPlayer.innerHTML="Au tour du joueur "+ (1+(clicks.a%nbJoueurs));
+    if(solidarity[clicks.a%nbJoueurs]===true){
+        buttton_solidaire.style.visibility="visible";
+    }
+    else{
+        buttton_solidaire.style.visibility="hidden";
+    }
     
 }
 
@@ -346,144 +441,168 @@ function nb_complet(position){
     complet.a[position]=nbComplet;
 }
 
-function bac_or_set(objet,position){
-    document.getElementById("choice").style.display = "block";
-    if("img" in objet){//On vérifie que la carte est une image
-        console.log("A une image");
-        document.getElementById("textFound").innerHTML = "<img src='"+objet.img+"'>";
+function bac_or_set(objet,position,name){
+    if("solidarity" in objet){
+        solidar(position);
     }
     else{
-        console.log("N'a pas une image");
-        document.getElementById("textFound").innerHTML = Object.values(objet);
+        document.getElementById("choice").style.display = "block";
+        if("img" in objet){//On vérifie que la carte est une image
+            console.log("A une image");
+            document.getElementById("textFound").innerHTML = "<img src='"+objet.img+"'>";
+        }
+        else{
+            console.log("N'a pas une image");
+            document.getElementById("textFound").innerHTML = Object.values(objet);
+        }
+        petit.onclick = function(){
+            if(name.includes("fruit") || name.includes("legume")  ){
+                Fruit_Legumes[j] = Fruit_Legumes[j]+1;
+            }
+            Petit_Dejeuner.images[position].push(name);
+            if("img" in objet){//On vérifie que la carte a une image
+                Petit_Dejeuner.a[position].push(Object.values(objet).slice(0, -1));
+            }
+            else{
+                Petit_Dejeuner.a[position].push(Object.values(objet));
+            }
+            plateau_rempli(Petit_Dejeuner,position);
+            dejeuner.style.visibility = "visible";//Réaffiche les boutons pour les autres cartes
+            diner.style.visibility = "visible";
+            document.getElementById("choice").style.display = "none";
+            complet.a = complet.a ;
+            for (var i = 0; i < nbJoueurs; i++) {
+                console.log("Petit Déjeuner "+(i+1)+": " + Petit_Dejeuner.a[i]);
+                console.log("Déjeuner "+(i+1)+": " + Dejeuner.a[i]);
+                console.log("Gouter "+(i+1)+": " + Gouter.a[i]);
+                console.log("Diner "+(i+1)+": " + Diner.a[i]);
+            }
+            console.log("Fruits_Legumes: " + Fruit_Legumes);
+            console.log("Interdits: "+ Interdits);
+            console.log("Complet: "+ complet.a);
+            nb_complet(position);
+            if(complet.a[position] >= 2 && Fruit_Legumes[position] >=5 && Interdits [position] === 0 ){
+                document.getElementById("textComplet").innerHTML = "Joueur " + (position+1).toString() + " gagne";
+                button.disabled = true;
+            }
+
+        };
+        dejeuner.onclick = function(){
+            if(name.includes("fruit") || name.includes("legume")  ){
+                Fruit_Legumes[j] = Fruit_Legumes[j]+1;
+            }
+            Dejeuner.images[position].push(name);
+            if("img" in objet){//On vérifie que la carte a une image
+                Dejeuner.a[position].push(Object.values(objet).slice(0, -1));
+            }
+            else{
+                Dejeuner.a[position].push(Object.values(objet));
+            }
+            plateau_rempli(Dejeuner,position);
+            document.getElementById("choice").style.display = "none";
+            complet.a = complet.a ;
+            for (var i = 0; i < nbJoueurs; i++) {
+                console.log("Petit Déjeuner "+(i+1)+": " + Petit_Dejeuner.a[i]);
+                console.log("Déjeuner "+(i+1)+": " + Dejeuner.a[i]);
+                console.log("Gouter "+(i+1)+": " + Gouter.a[i]);
+                console.log("Diner "+(i+1)+": " + Diner.a[i]);
+            }
+            console.log("Fruits_Legumes: " + Fruit_Legumes);
+            console.log("Interdits: "+ Interdits);
+            console.log("Complet: "+ complet.a);
+            nb_complet(position);
+            if(complet.a[position] >= 2 && Fruit_Legumes[position] >=5 && Interdits [position] === 0 ){
+                document.getElementById("textComplet").innerHTML = "Joueur " + (position+1).toString() + " gagne";
+                button.disabled = true;
+            }
+
+        };
+        gouter.onclick = function(){
+            if(name.includes("fruit") || name.includes("legume")  ){
+                Fruit_Legumes[j] = Fruit_Legumes[j]+1;
+            }
+            Gouter.images[position].push(name);
+            if("img" in objet){//On vérifie que la carte a une image
+                Gouter.a[position].push(Object.values(objet).slice(0, -1));
+            }
+            else{
+                Gouter.a[position].push(Object.values(objet));
+            }
+            plateau_rempli(Gouter,position);
+            dejeuner.style.visibility = "visible";
+            diner.style.visibility = "visible";
+            document.getElementById("choice").style.display = "none";
+            complet.a = complet.a ;
+            for (var i = 0; i < nbJoueurs; i++) {
+                console.log("Petit Déjeuner "+(i+1)+": " + Petit_Dejeuner.a[i]);
+                console.log("Déjeuner "+(i+1)+": " + Dejeuner.a[i]);
+                console.log("Gouter "+(i+1)+": " + Gouter.a[i]);
+                console.log("Diner "+(i+1)+": " + Diner.a[i]);
+            }
+            console.log("Fruits_Legumes: " + Fruit_Legumes);
+            console.log("Interdits: "+ Interdits);
+            console.log("Complet: "+ complet.a);
+            nb_complet(position);
+            if(complet.a[position] >= 2 && Fruit_Legumes[position] >=5 && Interdits [position] === 0 ){
+                document.getElementById("textComplet").innerHTML = "Joueur " + (position+1).toString() + " gagne";
+                button.disabled = true;
+            }
+
+        };
+        diner.onclick = function(){
+            if(name.includes("fruit") || name.includes("legume")){
+                Fruit_Legumes[j] = Fruit_Legumes[j]+1;
+            }
+            Diner.images[position].push(name);
+            if("img" in objet){//On vérifie que la carte a une image
+                Diner.a[position].push(Object.values(objet).slice(0, -1));
+            }
+            else{
+                Diner.a[position].push(Object.values(objet));
+            }
+            plateau_rempli(Diner,position);
+            document.getElementById("choice").style.display = "none";
+            complet.a = complet.a ;
+            for (var i = 0; i < nbJoueurs; i++) {
+                console.log("Petit Déjeuner "+(i+1)+": " + Petit_Dejeuner.a[i]);
+                console.log("Déjeuner "+(i+1)+": " + Dejeuner.a[i]);
+                console.log("Gouter "+(i+1)+": " + Gouter.a[i]);
+                console.log("Diner "+(i+1)+": " + Diner.a[i]);
+            }
+            console.log("Fruits_Legumes: " + Fruit_Legumes);
+            console.log("Interdits: "+ Interdits);
+            console.log("Complet: "+ complet.a);
+            nb_complet(position);
+            if(complet.a[position] >= 2 && Fruit_Legumes[position] >=5 && Interdits [position] === 0 ){
+                document.getElementById("textComplet").innerHTML = "Joueur " + (position+1).toString() + " gagne";
+                button.disabled = true;
+            }
+            turnPlayer.innerHTML="Au tour du joueur "+(1+(clicks.a%nbJoueurs));
+        };
+        bac.onclick=function(){
+            boutique.push(Object.values(objet));
+            document.getElementById("choice").style.display = "none";
+            for (var i = 0; i < nbJoueurs; i++) {
+                console.log("Petit Déjeuner "+(i+1)+": " + Petit_Dejeuner.a[i]);
+                console.log("Déjeuner "+(i+1)+": " + Dejeuner.a[i]);
+                console.log("Gouter "+(i+1)+": " + Gouter.a[i]);
+                console.log("Diner "+(i+1)+": " + Diner.a[i]);
+            }
+            console.log("Fruits_Legumes: " + Fruit_Legumes);
+            console.log("Interdits: "+ Interdits);
+
+            fillTab();
+
+        };
     }
-    
-    petit.onclick = function(){
-        if("img" in objet){//On vérifie que la carte a une image
-            Petit_Dejeuner.a[position].push("<img src='"+objet.img+"'>");
-        }
-        else{
-            Petit_Dejeuner.a[position].push(Object.values(objet));
-        }
-        dejeuner.style.visibility = "visible";//Réaffiche les boutons pour les autres cartes
-        diner.style.visibility = "visible";
-        document.getElementById("choice").style.display = "none";
-        complet.a = complet.a ;
-        for (var i = 0; i < nbJoueurs; i++) {
-            console.log("Petit Déjeuner "+(i+1)+": " + Petit_Dejeuner.a[i]);
-            console.log("Déjeuner "+(i+1)+": " + Dejeuner.a[i]);
-            console.log("Gouter "+(i+1)+": " + Gouter.a[i]);
-            console.log("Diner "+(i+1)+": " + Diner.a[i]);
-        }
-        console.log("Fruits_Legumes: " + Fruit_Legumes);
-        console.log("Interdits: "+ Interdits);
-        console.log("Complet: "+ complet.a);
-        nb_complet(position);
-        if(complet.a[position] >= 2 && Fruit_Legumes[position] >=5 && Interdits [position] === 0 ){
-            document.getElementById("textComplet").innerHTML = "Joueur " + (position+1).toString() + " gagne";
-            button.disabled = true;
-        }
-        
-    };
-    dejeuner.onclick = function(){
-        if("img" in objet){//On vérifie que la carte a une image
-            Dejeuner.a[position].push(Object.values(objet).slice(0, -1));
-        }
-        else{
-            Dejeuner.a[position].push(Object.values(objet));
-        }
-        document.getElementById("choice").style.display = "none";
-        complet.a = complet.a ;
-        for (var i = 0; i < nbJoueurs; i++) {
-            console.log("Petit Déjeuner "+(i+1)+": " + Petit_Dejeuner.a[i]);
-            console.log("Déjeuner "+(i+1)+": " + Dejeuner.a[i]);
-            console.log("Gouter "+(i+1)+": " + Gouter.a[i]);
-            console.log("Diner "+(i+1)+": " + Diner.a[i]);
-        }
-        console.log("Fruits_Legumes: " + Fruit_Legumes);
-        console.log("Interdits: "+ Interdits);
-        console.log("Complet: "+ complet.a);
-        nb_complet(position);
-        if(complet.a[position] >= 2 && Fruit_Legumes[position] >=5 && Interdits [position] === 0 ){
-            document.getElementById("textComplet").innerHTML = "Joueur " + (position+1).toString() + " gagne";
-            button.disabled = true;
-        }
-
-    };
-    gouter.onclick = function(){
-        if("img" in objet){//On vérifie que la carte a une image
-            Gouter.a[position].push(Object.values(objet).slice(0, -1));
-        }
-        else{
-            Gouter.a[position].push(Object.values(objet));
-        }
-        dejeuner.style.visibility = "visible";
-        diner.style.visibility = "visible";
-        document.getElementById("choice").style.display = "none";
-        complet.a = complet.a ;
-        for (var i = 0; i < nbJoueurs; i++) {
-            console.log("Petit Déjeuner "+(i+1)+": " + Petit_Dejeuner.a[i]);
-            console.log("Déjeuner "+(i+1)+": " + Dejeuner.a[i]);
-            console.log("Gouter "+(i+1)+": " + Gouter.a[i]);
-            console.log("Diner "+(i+1)+": " + Diner.a[i]);
-        }
-        console.log("Fruits_Legumes: " + Fruit_Legumes);
-        console.log("Interdits: "+ Interdits);
-        console.log("Complet: "+ complet.a);
-        nb_complet(position);
-        if(complet.a[position] >= 2 && Fruit_Legumes[position] >=5 && Interdits [position] === 0 ){
-            document.getElementById("textComplet").innerHTML = "Joueur " + (position+1).toString() + " gagne";
-            button.disabled = true;
-        }
-
-    };
-    diner.onclick = function(){
-        if("img" in objet){//On vérifie que la carte a une image
-            Diner.a[position].push(Object.values(objet).slice(0, -1));
-        }
-        else{
-            Diner.a[position].push(Object.values(objet));
-        }
-        document.getElementById("choice").style.display = "none";
-        complet.a = complet.a ;
-        for (var i = 0; i < nbJoueurs; i++) {
-            console.log("Petit Déjeuner "+(i+1)+": " + Petit_Dejeuner.a[i]);
-            console.log("Déjeuner "+(i+1)+": " + Dejeuner.a[i]);
-            console.log("Gouter "+(i+1)+": " + Gouter.a[i]);
-            console.log("Diner "+(i+1)+": " + Diner.a[i]);
-        }
-        console.log("Fruits_Legumes: " + Fruit_Legumes);
-        console.log("Interdits: "+ Interdits);
-        console.log("Complet: "+ complet.a);
-        nb_complet(position);
-        if(complet.a[position] >= 2 && Fruit_Legumes[position] >=5 && Interdits [position] === 0 ){
-            document.getElementById("textComplet").innerHTML = "Joueur " + (position+1).toString() + " gagne";
-            button.disabled = true;
-        }
-        turnPlayer.innerHTML="Au tour du joueur "+(1+(clicks.a%nbJoueurs));
-    };
-    bac.onclick=function(){
-        boutique.push(Object.values(objet));
-        document.getElementById("choice").style.display = "none";
-        for (var i = 0; i < nbJoueurs; i++) {
-            console.log("Petit Déjeuner "+(i+1)+": " + Petit_Dejeuner.a[i]);
-            console.log("Déjeuner "+(i+1)+": " + Dejeuner.a[i]);
-            console.log("Gouter "+(i+1)+": " + Gouter.a[i]);
-            console.log("Diner "+(i+1)+": " + Diner.a[i]);
-        }
-        console.log("Fruits_Legumes: " + Fruit_Legumes);
-        console.log("Interdits: "+ Interdits);
-        
-        fillTab();
-
-    };
 }
 
 function malice(objet){
-    document.getElementById("qcm").style.display = "block";
+    showcase.style.display = "block";
     var texte="";
     texte= texte+"<p>"+objet.texte+"</p>";
     texte=texte+'<button id="action" onclick='+objet.action_2+'>Action</button>';
-    document.getElementById("qcm").innerHTML=texte;
+    showcase.innerHTML=texte;
 }
 
 function remove_all(num_joueur,element,carte){
@@ -491,10 +610,10 @@ function remove_all(num_joueur,element,carte){
     remove(Dejeuner.a[num_joueur],element);
     remove(Gouter.a[num_joueur],element);
     remove(Diner.a[num_joueur],element);
-    document.getElementById("qcm").style.display = "none";
+    showcase.style.display = "none";
     var result=Math.floor(Math.random() * 2) + 1;
-    var objet = eval(carte+result);
-    bac_or_set(objet,num_joueur);
+    var objet = carte+result;
+    bac_or_set(eval(objet),num_joueur,objet);
 }
 
 function remove(tableau, element){
