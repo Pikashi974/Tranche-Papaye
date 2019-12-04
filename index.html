@@ -19,6 +19,9 @@
     <button onclick="off()">Start</button>
   </div>
 </div>
+
+
+
 <img id="titre" src="./public/css/Titre Tranche Papaye.png">
 <p id="turnPlayer">
    
@@ -42,21 +45,27 @@
     <button id="add_diner">Ajouter au diner</button>
 </div>
 
-<div class="grid-container" id="grid-tab">
+
+<div id="game">
+    <div class="grid-container" id="grid-tab">
     
+    </div>
+    <div id="dice">
+        <p id="placeholder">
+        
+        </p>
+        <button id="button">Roll Dice</button>
+        <button id="boutique_open" onclick="open_boutique()">Ouvrir la boutique</button>
+    </div>
 </div>
+
   <p id="textComplet">
       
   </p>
   <p id="textResult" hidden="true"> 
       
   </p>
-  <p id="placeholder">
-    
-    </p>
-  <button id="button">Roll Dice</button>
-  <button id="boutique_open" onclick="open_boutique()">Ouvrir la boutique</button>
-  <button id="charity" style="visibility: hidden;" onclick="charity()">Utiliser une carte solidarité</button>
+  
   <script src="Règles cartes.js" charset="iso-8859-1"></script>
   <script src="./Fruits/fruit1.js"charset="iso-8859-1"></script>
   <script src="./Fruits/fruit2.js"charset="iso-8859-1"></script>

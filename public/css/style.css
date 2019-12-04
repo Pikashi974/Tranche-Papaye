@@ -1,4 +1,14 @@
+body{
+    background: url("http://college-braspanon.ac-reunion.fr/wp-content/themes/TheSource/images/content_bg.png") repeat-x;
+}
 
+#game{
+  display: grid;
+  grid-template-columns: auto auto;
+}
+#dice{
+  align-items: center;
+}
 button {
   background-color: rgb(82, 186, 179);
   border-radius: 6px;
@@ -52,7 +62,7 @@ button {
 }
 .grid-item {
   width: 293px; /*800*/
-  /*! height: 320px; *//*556*/
+  height: 320px;/*556*/
   background-image: url("https://media.discordapp.net/attachments/517060733649813524/645969112622825502/unknown.png");/**/
   border: 1px solid rgba(0, 0, 0, 0.8);
   text-align: left;
@@ -66,14 +76,17 @@ button {
 }
 #first_part, #second_part {
     display: grid;
-    grid-template-columns: 97px 32px 97px 24px 136px; 
+    grid-template-columns: 97px 32px 97px 24px 90px; 
     width: 100px;
     padding-left: 25px;
     height: 94px;
     padding-top: 50px;
 }
-
+#Gouter,#Diner{
+  padding-top: 50px;
+}
 #second_part {
  padding-left: 55px;
-  
+ grid-template-columns: 97px 32px 97px 24px 90px; 
+ padding-top: 2px;
 }
