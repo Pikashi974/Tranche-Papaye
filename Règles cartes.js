@@ -378,6 +378,7 @@ function fillGrid() {
        }
        x[i].innerHTML = texte
     }
+    
 }
 
 function count(element,tableau){
@@ -690,6 +691,7 @@ function fillTab(){
         }
     }
     fillGrid();
+    
 }
 function shuffle(a) {
     for (let i = a.length - 1; i > 0; i--) {
@@ -709,13 +711,12 @@ button.onclick = function() {
   printNumber(result);
   object.innerHTML = card(result);
   turnPlayer.innerHTML="Au tour du joueur "+ (1+(clicks.a%nbJoueurs));
-  if (skip[clicks.a%nbJoueurs]===true){//L'enfant doit passer son tour
-    turnPlayer.innerHTML="Le joueur "+ (1+(clicks.a%nbJoueurs) +" passe son tour");
-    skip[clicks.a%nbJoueurs]=false; //Sert à redonner son tour à l'enfant s'il a du passer son tour
-    clicks.a += 1;
-  }
-  else{
+  clicks.a += 1;
+  de_result();
+  if (skip[(clicks.a)%nbJoueurs]===true){//L'enfant doit passer son tour
+      turnPlayer.innerHTML="Le joueur "+ (1+(clicks.a%nbJoueurs) +" passe son tour <br>\n\
+      Au tour du joueur "+ (1+((clicks.a+1)%nbJoueurs)));
+      skip[clicks.a%nbJoueurs]=false; //Sert à redonner son tour à l'enfant s'il a du passer son tour
       clicks.a += 1;
-      de_result();
-  }
+    }
 };
