@@ -63,7 +63,7 @@ button {
 .grid-item {
   width: 293px; /*800*/
   height: 320px;/*556*/
-  background-image: url("https://media.discordapp.net/attachments/517060733649813524/645969112622825502/unknown.png");/**/
+  
   border: 1px solid rgba(0, 0, 0, 0.8);
   text-align: left;
   font-size: small;
@@ -89,4 +89,23 @@ button {
  padding-left: 55px;
  grid-template-columns: 97px 32px 97px 24px 90px; 
  padding-top: 2px;
+}
+
+#grid-item1.grid-item{
+	background-image: url("file:///C:/Users/users-6425/Documents/JavaScript/public/css/Plateau_1.png")/**/
+}
+#grid-item2.grid-item{
+	background-image: url("file:///C:/Users/users-6425/Documents/JavaScript/public/css/Plateau_2.png")/**/
+}
+#grid-item3.grid-item{
+	background-image: url("file:///C:/Users/users-6425/Documents/JavaScript/public/css/Plateau_3.png")/**/
+}
+#grid-item4.grid-item{
+	background-image: url("file:///C:/Users/users-6425/Documents/JavaScript/public/css/Plateau_4.png")/**/
+}
+#grid-item5.grid-item{
+	background-image: url("file:///C:/Users/users-6425/Documents/JavaScript/public/css/Plateau_5.png")/**/
+}
+#grid-item6.grid-item{
+	background-image: url("file:///C:/Users/users-6425/Documents/JavaScript/public/css/Plateau_6.png")/**/
 }

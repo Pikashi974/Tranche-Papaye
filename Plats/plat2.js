@@ -2,5 +2,5 @@ const plat2 = {
     first: "Riz",
     second: "Saucisses",
     third: "Poivre",
-    isFruit_Legumes: []
+    isFruit_Legumes: false
 };

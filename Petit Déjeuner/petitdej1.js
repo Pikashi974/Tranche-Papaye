@@ -3,5 +3,5 @@ const petitDej1 = {
     second:"Fromage blanc",
     third:"Infusion à la verveine",
     fourth:"Pêches",
-    isFruit_Legumes: ["Pêches"]
+    isFruit_Legumes: true
 };

@@ -1,8 +1,8 @@
-var yourSelect = document.getElementById("nbJoueurs");
-var button = document.getElementById('button');
-var placeholder = document.getElementById('placeholder');
-var object = document.getElementById("textResult");
-var turnPlayer = document.getElementById("turnPlayer");
+var yourSelect = document.getElementById("nbJoueurs");//Fait référence au nombre de joueurs choisis (entre 2 et 6)
+var button = document.getElementById('button');//Bouton de roulement de dé
+var placeholder = document.getElementById('placeholder');//Zone où la valeur du dé est affichée
+var object = document.getElementById("textResult");//Caché, sert à déterminer si le joueur démarre ou non
+var turnPlayer = document.getElementById("turnPlayer");//Affiche le joueur qui doit jouer actuellement
 
 var showcase = document.getElementById("qcm");
 
@@ -13,15 +13,15 @@ var gouter = document.getElementById('add_gouter');
 var diner = document.getElementById('add_diner');
 
 var nbJoueurs = yourSelect.options[ yourSelect.selectedIndex ].value;
-var demarrage = [false,false,false,false, false, false];
-var skip = [false,false,false,false, false, false];
-var solidarity = [false,false,false,false, false, false];
-var plateau = [];
+var demarrage = [false,false,false,false, false, false]; //permet de vérifier si le joueur a le droit de démarrer
+var skip = [false,false,false,false, false, false];//permet de vérifier si le joueur doit passer son tour 
+var solidarity = [false,false,false,false, false, false];//permet de vérifier si le joueur a une carte solidarité
+var plateau = []; //permet d'afficher les repas que possèdent chaque joueur
 
 var dice = {
   sides: 6,
   roll: function () {
-    var randomNumber = Math.floor(Math.random() * this.sides) + 1;
+    var randomNumber = Math.floor(Math.random() * this.sides) + 1; //Choisit aléatoirement un nombre entre 1 et 6
 	switch (randomNumber){
 	  	case 1:
 	  		var choice = "Plats";
@@ -46,10 +46,10 @@ var dice = {
   }
 };
 
-var clicks = {
+var clicks = {//Sert à gérer le tour par tour
   aInternal: 0,
   aListener: function(val) {},
-  set a(val) {
+  set a(val) {//Ecoute pour savoir si la variable est modifiée
     this.aInternal = val;
     this.aListener(val);
   },
@@ -60,16 +60,16 @@ var clicks = {
     this.aListener = listener;
   }
 };
-clicks.registerListener(function(val) {
+clicks.registerListener(function(val) {//Va s'activer chaque fois que le nombre de clics change'
   console.log("clicks " + val);
   j = (clicks.a-1)%nbJoueurs;
 });
 
-var j = clicks.a%nbJoueurs;//Permet de savoir  quel joueur joue
+var j = clicks.a%nbJoueurs;//Permet de savoir quel joueur joue
 
 var Petit_Dejeuner = {
-  aInternal: [[],[],[],[],[],[]],
-  images: [[],[],[],[],[],[]],
+  aInternal: [[],[],[],[],[],[]],//Stocke les différentes cartes mises dans petit-déjeuner
+  images: [[],[],[],[],[],[]],//Stocke les différentes images liées aux cartes dans petit-déjeuner
   name:"Petit_Dejeuner",
   aListener: function(val) {},
   set a(val) {
@@ -88,8 +88,8 @@ Petit_Dejeuner.registerListener(function(val) {
 });
 
 var Dejeuner = {
-  aInternal: [[],[],[],[],[],[]],
-  images: [[],[],[],[],[],[]],  
+  aInternal: [[],[],[],[],[],[]],//Stocke les différentes cartes mises dans déjeuner
+  images: [[],[],[],[],[],[]],//Stocke les différentes images liées aux cartes dans déjeuner
   name: "Dejeuner",
   aListener: function(val) {},
   set a(val) {
@@ -108,8 +108,8 @@ Dejeuner.registerListener(function(val) {
 });
 
 var Gouter = {
-  aInternal: [[],[],[],[],[],[]],
-  images: [[],[],[],[],[],[]],  
+  aInternal: [[],[],[],[],[],[]],//Stocke les différentes cartes mises dans gouter
+  images: [[],[],[],[],[],[]],//Stocke les différentes images liées aux cartes dans gouter
   name: "Gouter",
   aListener: function(val) {},
   set a(val) {
@@ -128,8 +128,8 @@ Gouter.registerListener(function(val) {
 });
 
 var Diner = {
-  aInternal: [[],[],[],[],[],[]],
-  images: [[],[],[],[],[],[]],  
+  aInternal: [[],[],[],[],[],[]],//Stocke les différentes cartes mises dans diner
+  images: [[],[],[],[],[],[]],//Stocke les différentes images liées aux cartes dans  diner
   name: "Diner",
   aListener: function(val) {},
   set a(val) {
@@ -147,13 +147,13 @@ Diner.registerListener(function(val) {
     fillTab();
 });
 
-var Fruit_Legumes =[0,0,0,0,0,0];
-var Interdits = [0,0,0,0,0,0];
+var Fruit_Legumes =[0,0,0,0,0,0];//Regarde le nombre de fruits et légumes pour chaque joueur
+var Interdits = [0,0,0,0,0,0];//Regarde le nombre d'aliments interdits'pour chaque joueur
 var boutique = [];
 
 
 var complet = {
-  aInternal: [0,0,0,0,0,0],
+  aInternal: [0,0,0,0,0,0],//Regarde le nombre de repas complets pour chaque joueur
   aListener: function(val) {},
   set a(val) {
     this.aInternal = val;
@@ -170,7 +170,7 @@ complet.registerListener(function(val) {
     fillTab();
 });
 
-function qcm(chance){
+function qcm(chance){//projette le qcm associé à une carte chance (ou malice)
     showcase.style.display = "block";
     var texte="";
     texte= texte+"<p>"+chance.texte+ "<br>"+chance.question+"</p>";
@@ -183,7 +183,7 @@ function qcm(chance){
     showcase.innerHTML=texte;
 } 
 
-function réponse(rep,answer){
+function réponse(rep,answer){//Vérifie si un QCM a bien été répondu
     
     if(rep === answer){
         var texte = "Bonne réponse";
@@ -197,11 +197,11 @@ function réponse(rep,answer){
     
 }
 
-function close_qcm(){
+function close_qcm(){//Sert à fermer la fenêtre quand le QCM a été répondu(bien ou non)
     showcase.style.display = "none";
 }
 
-function open_boutique() {
+function open_boutique() {//Fonction qui gère l'ouverture de la boutique
     document.getElementById("boutique").style.display = "block";
     if(boutique.length === 0){
         document.getElementById("item_boutique").innerHTML="Vide";
@@ -211,15 +211,15 @@ function open_boutique() {
     }
 }
 
-function close_boutique() {
+function close_boutique() {//Fonction qui ferme la boutique
     document.getElementById("boutique").style.display = "none";
 }
 
-function on() {
+function on() {//Affiche l'overlay qui affiche le choix du nombre de joueurs
     document.getElementById("overlay").style.display = "block";
 }
 
-function off() {
+function off() {//Retire l'overlay qui affiche le choix du nombre de joueurs
     document.getElementById("overlay").style.display = "none";
     nbJoueurs = yourSelect.options[ yourSelect.selectedIndex ].value;
     gridCreation(nbJoueurs);
@@ -228,11 +228,11 @@ function off() {
     
 }
 
-function printNumber(number) {
+function printNumber(number) {//Affiche la valeur du dé à sa position 
   placeholder.innerHTML = number;
 }
 
-function card(result) {
+function card(result) {//Détermine si le joueur peut démarrer ou non
     switch (result){
         case "La malice":
         case "La chance":
@@ -249,26 +249,26 @@ function card(result) {
     return choice;
 }
 
-function solidar(position){
+function solidar(position){//Agit si une personne a pioché une carte solidarité
     showcase.style.display = "block";
     var texte = "";
-    texte = texte+"<img src='./public/css/Solidarite.png'><br>";
+    texte = texte+"<img src='C:\\Users\\users-6425\\Documents\\JavaScript\\public\\css\\Solidarite.png'><br>";
     texte = texte+"<button onclick='boutique()'>Ajouter à la boutique</button> <button onclick=board("+position+")>Ajouter au plateau</button>";
     showcase.innerHTML = texte;
 }
 
-function boutique(){
+function boutique(){//Ajoute la carte solidarité à la boutique
     showcase.style.display = "none";
     fillTab();
 }
 
-function board(position){
+function board(position){//Ajoute la carte solidarité au plateau du joueur
     solidarity[position]=true;
     showcase.style.display = "none";
     fillTab();
 }
 
-function charity(joueur){
+function charity(joueur){//Permet d'utiliser une carte solidarité sur un joueur potentiel(qui n'a pas démarré ou qui passe son tour)
     showcase.style.display = "block";
     var texte = "<p>Faire preuve de solidarité à qui?</p><br>";
     for (var i = 0; i < nbJoueurs; i++) {
@@ -281,7 +281,7 @@ function charity(joueur){
     
 }
 
-function liberate(nbJoueur,giver){
+function liberate(nbJoueur,giver){//Permet à un joueur de jouer si son tour a été passé/n'a pas démarré
     demarrage[nbJoueur]=true;
     skip[nbJoueur] = false;
     showcase.style.display = "none";
@@ -290,7 +290,7 @@ function liberate(nbJoueur,giver){
     //clicks.a+=1;
 }
 
-function plateau_rempli(tableau,position){
+function plateau_rempli(tableau,position){//S'affiche quand le joueur a plus de 3 cartes sur le plateau
     if(tableau.images[position].length> 2){
         showcase.style.display = "block";
         var texte = "<p>Retirer quelle carte?</p><br>";
@@ -310,11 +310,14 @@ function plateau_rempli(tableau,position){
 };
 
 function gestion_elements(objet){
-    if("isFruit_Legumes" in objet && "img" in objet){//On ajoute un plat ou un petit-déjeuner/gouter avec image
-        //values(petitDej1).slice(0,(-petitDej1.isFruit_Legumes.length))
+    if("isFruit_Legumes" in objet && "img" in objet && "isInterdit" in objet){//On ajoute un plat ou un petit-déjeuner/gouter avec image
+        return(Object.values(objet).slice(0, -3 ));
+    }
+    else if("isFruit_Legumes" in objet && "img" in objet || "isFruit_Legumes" in objet && "isInterdit" in objet 
+			|| "isInterdit" in objet && "img" in objet){//On ajoute un plat ou un petit-déjeuner/gouter avec image
         return(Object.values(objet).slice(0, -2 ));
     }
-    else if(("isFruit_Legumes" in objet && ("img" in objet === false))||("img" in objet)){
+    else if(("isFruit_Legumes" in objet && ("img" in objet === false))||("img" in objet) || "isInterdit" in objet){
         //On ajoute un plat ou un petit-déjeuner/gouter sans image ou un fruit/légume avec une image
         return(Object.values(objet).slice(0, -1 ));
             
@@ -324,8 +327,7 @@ function gestion_elements(objet){
     }
 }
 
-function retirer(tableau,position, i){
-    
+function retirer(tableau,position, i){//retire tout les éléments d'un tableau
     var tab = eval(tableau);
     var test = eval(tab.images[position][i]);
     console.log("Fruit?"+tab.images[position][i].includes("fruit"));
@@ -333,13 +335,12 @@ function retirer(tableau,position, i){
     
     console.log("Avant: " + tab.a[position]);
     console.log("Avant: " + tab.images[position]);
-    if("isFruit_Legumes" in test){
-        Fruit_Legumes[position] = Fruit_Legumes[position]-test.isFruit_Legumes.length;
-    }
-    else if(tab.images[position][i].includes("fruit") || tab.images[position][i].includes("legume")){
+    if(("isFruit_Legumes" in test && test.isFruit_Legumes===true) || tab.images[position][i].includes("fruit") || tab.images[position][i].includes("legume")){
         Fruit_Legumes[position] = Fruit_Legumes[position]-1;
     }
-    
+    else if("isInterdit" in test && test.isFruit_Legumes===true){
+		Interdits[position] = Interdits[position]-1;
+	}
     tab.a[position].splice(i,1); //.splice(i, 1);
     tab.images[position].splice(i,1);
     console.log("Après: " + tab.a[position]);
@@ -348,11 +349,12 @@ function retirer(tableau,position, i){
     showcase.style.display = "none";
     fillTab();
 }
-function gridCreation(n){
+function gridCreation(n){//Va créer un plateau pour chaque joueur
     grid=document.getElementById("grid-tab");
     for (var i = 0; i < n; i++) {
         var item_board = document.createElement("div");
         item_board.className="grid-item";
+		item_board.id="grid-item"+(i+1);
         grid.appendChild(item_board);
 
         var canvas_item = document.createElement("canvas");
@@ -362,7 +364,7 @@ function gridCreation(n){
     }
 }
 
-function fillGrid() {
+function fillGrid() {//Remplit tout les tableaux avec les éléments 
     x=document.getElementsByClassName("grid-item");
     for (var i = 0; i < x.length; i++) {
        var texte="<div id='first_part'><div id='PetidDej'> " + Petit_Dejeuner.a[i]
@@ -371,7 +373,7 @@ function fillGrid() {
                +"</div> <div id='Vide2'></div> <div id='Diner'> " + Diner.a[i] +"</div><div id='Vide3'></div><div id='Solidarity'>";
        
        if(solidarity[i]===true){
-           texte = texte+"<img onclick=charity("+i+") src='./public/css/Solidarite.png' width='90px'></div></div>";
+           texte = texte+"<img onclick=charity("+i+") src='C:\\Users\\users-6425\\Documents\\JavaScript\\public\\css\\Solidarite.png' width='90px'></div></div>";
        }
        else{
            texte = texte+"</div></div>";
@@ -379,16 +381,6 @@ function fillGrid() {
        x[i].innerHTML = texte
     }
     
-}
-
-function count(element,tableau){
-    var n = 0;
-    for(var k = 0; k < tableau.length; ++k){
-        if(tableau[k] === element){
-            n++;
-        }
-    }
-    return(n);
 }
 
 function de_result(){
@@ -399,22 +391,26 @@ function de_result(){
             //console.log("placeholder.innerHTML==="+placeholder.innerHTML);
             demarrage[i]=true;//On dit que l'enfant peut démarrer
             console.log("j= "+j);
-            var result=Math.floor(Math.random() * 2) + 1;
             console.log("result= "+result);
             switch(placeholder.innerHTML){
                 case "La malice":
                     skip[i]=true; //l'enfant passe son tour à cause de la carte malice
+                    var result=Math.floor(Math.random() * 1) + 1; //Modifier le chiffre 2 si d'autres cartes sont rajoutées
                     eval(eval("malice"+result+".action"));
                     break;
                 case "La chance":
-                    eval(chance1.action);
+                    skip[i]=true; //l'enfant passe son tour à cause de la carte malice
+                    var result=Math.floor(Math.random() * 1) + 1; //Modifier le chiffre 2 si d'autres cartes sont rajoutées
+                    eval(eval("chance"+result+".action"));
                     break;
                 case "Plats":
+                    var result=Math.floor(Math.random() * 2) + 1; //Modifier le chiffre 2 si d'autres cartes sont rajoutées
                     var objet = "plat"+result;
                     //console.log("Plat:"+Object.values(objet));
                     bac_or_set(eval(objet),j,objet);
                     break;
                 case "Petits déjeuners et goûters":
+                    var result=Math.floor(Math.random() * 2) + 1; //Modifier le chiffre 2 si d'autres cartes sont rajoutées
                     var objet = "petitDej"+result;
                     //console.log("Plat:"+Object.values(objet));
                     dejeuner.style.visibility = "hidden";
@@ -423,11 +419,13 @@ function de_result(){
                     break;
                 case "Fruits":
                     console.log("Fruit");
+                    var result=Math.floor(Math.random() * 2) + 1; //Modifier le chiffre 2 si d'autres cartes sont rajoutées
                     var objet = "fruit"+result;
                     //console.log("Fruit:"+Object.values(objet));
                     bac_or_set(eval(objet),j,objet);
                     break;
                 case "Légumes":
+                    var result=Math.floor(Math.random() * 2) + 1; //Modifier le chiffre 2 si d'autres cartes sont rajoutées
                     console.log("Legume");
                     var objet = "legume"+result;
                     //console.log("Légume:"+Object.values(objet));
@@ -443,7 +441,7 @@ function de_result(){
     
 }
 
-function nb_complet(position){
+function nb_complet(position){//Vérifie le nombre de repas complet
     var nbComplet=0;
     if([].concat.apply([], Petit_Dejeuner.a[position]).length>=3){
        nbComplet+=1; 
@@ -460,7 +458,7 @@ function nb_complet(position){
     complet.a[position]=nbComplet;
 }
 
-function bac_or_set(objet,position,name){
+function bac_or_set(objet,position,name){//Gère l'action à faire si une carte est piochée 
     if("solidarity" in objet){
         solidar(position);
     }
@@ -478,12 +476,12 @@ function bac_or_set(objet,position,name){
             console.log("N'a pas une image");
             document.getElementById("textFound").innerHTML = Object.values(objet);
         }
-        petit.onclick = function(){
-            if(name.includes("fruit") || name.includes("legume")  ){
+        petit.onclick = function(){//Dupliqué pour les 4 repas, ajoute à un des repas
+            if(name.includes("fruit") || name.includes("legume") || ("isFruit_Legumes" in objet && objet.isFruit_Legumes===true) ){
                 Fruit_Legumes[j] = Fruit_Legumes[j]+1;
             }
-            else if("isFruit_Legumes" in objet){
-                Fruit_Legumes[j] = Fruit_Legumes[j]+objet.isFruit_Legumes.length;
+            else if("isInterdit" in objet && objet.isInterdit===true){
+                Interdits[j] = Interdits[j]+1;
             }
             Petit_Dejeuner.images[position].push(name);
             specific_values(objet,position, Petit_Dejeuner.a);
@@ -492,16 +490,8 @@ function bac_or_set(objet,position,name){
             diner.style.visibility = "visible";
             document.getElementById("choice").style.display = "none";
             complet.a = complet.a ;
-//            for (var i = 0; i < nbJoueurs; i++) {
-//                console.log("Petit Déjeuner "+(i+1)+": " + Petit_Dejeuner.a[i]);
-//                console.log("Déjeuner "+(i+1)+": " + Dejeuner.a[i]);
-//                console.log("Gouter "+(i+1)+": " + Gouter.a[i]);
-//                console.log("Diner "+(i+1)+": " + Diner.a[i]);
-//            }
-//            console.log("Fruits_Legumes: " + Fruit_Legumes);
-//            console.log("Interdits: "+ Interdits);
-//            console.log("Complet: "+ complet.a);
             nb_complet(position);
+			//Vérifie si les conditions de victoires sont atteintes
             if(complet.a[position] >= 2 && Fruit_Legumes[position] >=5 && Interdits [position] === 0 ){
                 document.getElementById("textComplet").innerHTML = "Joueur " + (position+1).toString() + " gagne";
                 button.disabled = true;
@@ -509,27 +499,19 @@ function bac_or_set(objet,position,name){
 
         };
         dejeuner.onclick = function(){
-            if(name.includes("fruit") || name.includes("legume")  ){
+            if(name.includes("fruit") || name.includes("legume") || ("isFruit_Legumes" in objet && objet.isFruit_Legumes===true) ){
                 Fruit_Legumes[j] = Fruit_Legumes[j]+1;
             }
-            else if("isFruit_Legumes" in objet){
-                Fruit_Legumes[j] = Fruit_Legumes[j]+objet.isFruit_Legumes.length;
+            else if("isInterdit" in objet && objet.isInterdit===true){
+                Interdits[j] = Interdits[j]+1;
             }
             Dejeuner.images[position].push(name);
             specific_values(objet,position, Dejeuner.a);
             plateau_rempli(Dejeuner,position);
             document.getElementById("choice").style.display = "none";
             complet.a = complet.a ;
-//            for (var i = 0; i < nbJoueurs; i++) {
-//                console.log("Petit Déjeuner "+(i+1)+": " + Petit_Dejeuner.a[i]);
-//                console.log("Déjeuner "+(i+1)+": " + Dejeuner.a[i]);
-//                console.log("Gouter "+(i+1)+": " + Gouter.a[i]);
-//                console.log("Diner "+(i+1)+": " + Diner.a[i]);
-//            }
-//            console.log("Fruits_Legumes: " + Fruit_Legumes);
-//            console.log("Interdits: "+ Interdits);
-//            console.log("Complet: "+ complet.a);
             nb_complet(position);
+			//Vérifie si les conditions de victoires sont atteintes
             if(complet.a[position] >= 2 && Fruit_Legumes[position] >=5 && Interdits [position] === 0 ){
                 document.getElementById("textComplet").innerHTML = "Joueur " + (position+1).toString() + " gagne";
                 button.disabled = true;
@@ -537,11 +519,11 @@ function bac_or_set(objet,position,name){
 
         };
         gouter.onclick = function(){
-            if(name.includes("fruit") || name.includes("legume")  ){
+            if(name.includes("fruit") || name.includes("legume") || ("isFruit_Legumes" in objet && objet.isFruit_Legumes===true) ){
                 Fruit_Legumes[j] = Fruit_Legumes[j]+1;
             }
-            else if("isFruit_Legumes" in objet){
-                Fruit_Legumes[j] = Fruit_Legumes[j]+objet.isFruit_Legumes.length;
+            else if("isInterdit" in objet && objet.isInterdit===true){
+                Interdits[j] = Interdits[j]+1;
             }
             Gouter.images[position].push(name);
             specific_values(objet,position, Gouter.a);
@@ -550,16 +532,8 @@ function bac_or_set(objet,position,name){
             diner.style.visibility = "visible";
             document.getElementById("choice").style.display = "none";
             complet.a = complet.a ;
-//            for (var i = 0; i < nbJoueurs; i++) {
-//                console.log("Petit Déjeuner "+(i+1)+": " + Petit_Dejeuner.a[i]);
-//                console.log("Déjeuner "+(i+1)+": " + Dejeuner.a[i]);
-//                console.log("Gouter "+(i+1)+": " + Gouter.a[i]);
-//                console.log("Diner "+(i+1)+": " + Diner.a[i]);
-//            }
-//            console.log("Fruits_Legumes: " + Fruit_Legumes);
-//            console.log("Interdits: "+ Interdits);
-//            console.log("Complet: "+ complet.a);
             nb_complet(position);
+			//Vérifie si les conditions de victoires sont atteintes
             if(complet.a[position] >= 2 && Fruit_Legumes[position] >=5 && Interdits [position] === 0 ){
                 document.getElementById("textComplet").innerHTML = "Joueur " + (position+1).toString() + " gagne";
                 button.disabled = true;
@@ -567,44 +541,28 @@ function bac_or_set(objet,position,name){
 
         };
         diner.onclick = function(){
-            if(name.includes("fruit") || name.includes("legume")){
+            if(name.includes("fruit") || name.includes("legume") || ("isFruit_Legumes" in objet && objet.isFruit_Legumes===true) ){
                 Fruit_Legumes[j] = Fruit_Legumes[j]+1;
             }
-            else if("isFruit_Legumes" in objet){
-                Fruit_Legumes[j] = Fruit_Legumes[j] + objet.isFruit_Legumes.length;
+            else if("isInterdit" in objet && objet.isInterdit===true){
+                Interdits[j] = Interdits[j]+1;
             }
             Diner.images[position].push(name);
             specific_values(objet,position, Diner.a);
             plateau_rempli(Diner,position);
             document.getElementById("choice").style.display = "none";
             complet.a = complet.a ;
-//            for (var i = 0; i < nbJoueurs; i++) {
-//                console.log("Petit Déjeuner "+(i+1)+": " + Petit_Dejeuner.a[i]);
-//                console.log("Déjeuner "+(i+1)+": " + Dejeuner.a[i]);
-//                console.log("Gouter "+(i+1)+": " + Gouter.a[i]);
-//                console.log("Diner "+(i+1)+": " + Diner.a[i]);
-//            }
-//            console.log("Fruits_Legumes: " + Fruit_Legumes);
-//            console.log("Interdits: "+ Interdits);
-//            console.log("Complet: "+ complet.a);
             nb_complet(position);
+			//Vérifie si les conditions de victoires sont atteintes
             if(complet.a[position] >= 2 && Fruit_Legumes[position] >=5 && Interdits [position] === 0 ){
                 document.getElementById("textComplet").innerHTML = "Joueur " + (position+1).toString() + " gagne";
                 button.disabled = true;
             }
             turnPlayer.innerHTML="Au tour du joueur "+(1+(clicks.a%nbJoueurs));
         };
-        bac.onclick=function(){
+        bac.onclick=function(){//Ajoute la carte à la boutique
             boutique.push(Object.values(objet));
             document.getElementById("choice").style.display = "none";
-//            for (var i = 0; i < nbJoueurs; i++) {
-//                console.log("Petit Déjeuner "+(i+1)+": " + Petit_Dejeuner.a[i]);
-//                console.log("Déjeuner "+(i+1)+": " + Dejeuner.a[i]);
-//                console.log("Gouter "+(i+1)+": " + Gouter.a[i]);
-//                console.log("Diner "+(i+1)+": " + Diner.a[i]);
-//            }
-//            console.log("Fruits_Legumes: " + Fruit_Legumes);
-//            console.log("Interdits: "+ Interdits);
 
             fillTab();
 
@@ -612,7 +570,7 @@ function bac_or_set(objet,position,name){
     }
 }
 
-function malice(objet){
+function malice(objet){//Gère les cartes malices
     showcase.style.display = "block";
     var texte="";
     texte= texte+"<p>"+objet.texte+"</p>";
@@ -620,7 +578,7 @@ function malice(objet){
     showcase.innerHTML=texte;
 }
 
-function remove_all(num_joueur,element,carte){
+function remove_all(num_joueur,element,carte){//Retire toute les cartes avec un élément du plateau d'un joueur
     remove(Petit_Dejeuner.a[num_joueur],element);
     remove(Dejeuner.a[num_joueur],element);
     remove(Gouter.a[num_joueur],element);
@@ -632,7 +590,7 @@ function remove_all(num_joueur,element,carte){
     bac_or_set(eval(objet),num_joueur,objet);
 }
 
-function remove(tableau, element){
+function remove(tableau, element){//retire un élément de la liste des repas
     for (var i = 0; i < tableau.length; i++) {
         if(tableau[i].includes(element)){
             tableau.splice(i,1);
@@ -641,28 +599,6 @@ function remove(tableau, element){
     
 }
 
-function shuffle(object,tableau){
-    if(object in tableau){
-        tableau.pull(object);
-    }
-    
-}
-function readTextFile(file){
-    var rawFile = new XMLHttpRequest();
-    rawFile.open("GET", file, false);
-    rawFile.onreadystatechange = function ()
-    {
-        if(rawFile.readyState === 4)
-        {
-            if(rawFile.status === 200 || rawFile.status == 0)
-            {
-                var allText = rawFile.responseText;
-                alert(allText);
-            }
-        }
-    }
-    rawFile.send(null);
-}
 
 function specific_values(objet,position, tableau){
     if("isFruit_Legumes" in objet && "img" in objet){//On ajoute un plat ou un petit-déjeuner/gouter avec image
@@ -679,7 +615,7 @@ function specific_values(objet,position, tableau){
     }
 }
 
-function fillTab(){
+function fillTab(){//Remplit les plateaux
     plateau=[];
     var j = clicks.a%nbJoueurs;
     for (var i = 0; i < nbJoueurs; i++) {
@@ -702,11 +638,10 @@ function shuffle(a) {
 }
 
 
-var foo = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42];
 //var object = document.getElementById("textResult");
 
 
-button.onclick = function() {
+button.onclick = function() {//Gestion du bouton du dé
   var result = dice.roll();
   printNumber(result);
   object.innerHTML = card(result);
